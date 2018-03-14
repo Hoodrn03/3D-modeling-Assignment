@@ -39,40 +39,21 @@ LoadObject::~LoadObject()
 void LoadObject::m_loadobj(std::string sFilePath)
 {
 
-	std::fstream modelfile(sFilePath, std::ios_base::in);
-	
-	if (modelfile.is_open())
-	{
-		std::string line;
 
-		while (getline(modelfile, line))
-		{
-			std::string s; 
-
-			std::istringstream iss(line); 
-
-			iss >> s; 
-
-			if (s == "f")
-			{
-				
-
-
-			}
-
-			else if (s == "v")
-			{
-
-
-
-			}
-
-		}
-
-		modelfile.close();
-
-	}
 
 
 }
+
+
+//! This will return the final vertex for the shape, allowing for it to be drawn. 
+/*!
+/
+*/
+std::vector<float>& LoadObject::m_GetVertices()
+{
+	return v_Vertices; 
+}
+
+
+
 

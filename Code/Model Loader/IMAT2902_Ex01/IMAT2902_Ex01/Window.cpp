@@ -52,7 +52,7 @@ void Window::CreateGLWindow(HWND hWnd, RECT rect)
 	
 	// m_win32OpenGL.CreateShadersAndProgram("flat");
 	// m_win32OpenGL.CreateShadersAndProgram("flatVerticesAsColours");
-	 m_win32OpenGL.CreateShadersAndProgram("flatFixedColour");
+	m_win32OpenGL.CreateShadersAndProgram("flatFixedColour");
 
 
 	m_win32OpenGL.SetupDisplay();
@@ -98,7 +98,40 @@ void Window::PrepareToDraw()
 
 	// TODO - create VBO and VAO here
 
+	float sourceVertices[] = {
+		-0.5f,-0.5f,0,
+		0.5f,-0.5f,0,
+		-0.5f, 0.5f,0 };
+
+	// the code expects a vector of floats - create it here from the array.
+	int numberOfElements = sizeof(sourceVertices) / sizeof(float);
+	
+	for (int i = 0; i < numberOfElements; i++)
+	{
+		m_vertices.push_back(sourceVertices[i]);
+	}
+
 	loadObject.m_loadobj("Models\\Test_Objects\\cube.obj");
+
+	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
+	// create the vertex buffer object - the vbo
+
+	if (loadObject.m_GetVertices().size() > 0)
+	{
+		glGenBuffers(1, &m_vboVertices);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
+		glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVertices().size() * sizeof(GLfloat), &loadObject.m_GetVertices()[0], GL_STATIC_DRAW);
+
+		// create the vertex array object - the vao
+		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(m_vao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+		// vertices are element 0 in VAO (the only element currently)
+		glEnableVertexAttribArray(0);
+	
+	}
 
 	m_win32OpenGL.GetError();			// check all ok
 }
@@ -126,6 +159,16 @@ void Window::Draw()
 
 	// TODO draw code goes here
 
+	if (loadObject.m_GetVertices().size() > 0)
+	{
+		glBindVertexArray(m_vao); // select first VAO
+
+		GLuint numberOfElements = loadObject.m_GetVertices().size() / 3;
+
+		glDrawArrays(GL_TRIANGLES, 0, numberOfElements); // draw first object
+
+		glBindVertexArray(0);
+	}
 
 	m_win32OpenGL.FinishedDrawing();
 	
