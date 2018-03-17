@@ -39,7 +39,95 @@ LoadObject::~LoadObject()
 void LoadObject::m_loadobj(std::string sFilePath)
 {
 
+	std::fstream modelfile(sFilePath, std::ios_base::in);
 
+	std::string line = ""; 
+
+	if (modelfile.is_open())
+	{
+		while (getline(modelfile, line))
+		{
+
+			std::string s; 
+
+			std::istringstream iss(line);
+
+			iss >> s; 
+
+			if (s == "f")
+			{
+
+				// Check 'f' line 
+
+				unsigned int iFaceIndex; 
+
+				while (iss >> iFaceIndex)
+				{
+					iFaceIndex--; 
+
+					v_FaceIndices.push_back(iFaceIndex * 3); 
+				}
+
+			}
+
+			else if (s == "v")
+			{
+
+				// Check 'v' line
+
+				for (int i = 0; i < 3; i++)
+				{
+					float val; 
+
+					iss >> val; 
+
+					v_IndexedVertices.push_back(val); 
+				}
+
+			}
+
+			else if (s == "vt")
+			{
+
+				// Check 'vt' line 
+
+				for (int i = 0; i < 2; i++)
+				{
+					float val;
+
+					iss >> val;
+
+					v_IndexedVertexTexture.push_back(val);
+				}
+
+			}
+
+			else if (s == "vn")
+			{
+
+				// Check 'vn' line
+
+				for (int i = 0; i < 3; i++)
+				{
+					float val;
+
+					iss >> val;
+
+					v_IndexedNormals.push_back(val);
+				}
+
+			}
+
+			
+
+		}
+
+		// Close File 
+
+		modelfile.close(); 
+	}
+
+	// Create Final Vector. 
 
 
 }

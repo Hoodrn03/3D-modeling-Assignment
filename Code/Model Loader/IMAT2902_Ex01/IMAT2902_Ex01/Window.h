@@ -46,7 +46,7 @@ private:
 	// Camera Possition Coordinates.
 	float m_cameraX{ 0 };
 	float m_cameraY{ 0 };
-	float m_cameraZ{ 0.0f };
+	float m_cameraZ{ 1.5 };
 
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;

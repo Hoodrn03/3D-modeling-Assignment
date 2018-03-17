@@ -503,3 +503,63 @@ Creating shader: Shaders\flatFixedColour.frag
 Shader compiled
 Program valid
 Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created
+Creating shader: Shaders\flatFixedColour.vert
+Shader compiled
+Creating shader: Shaders\flatFixedColour.frag
+Shader compiled
+Program valid
+Program created

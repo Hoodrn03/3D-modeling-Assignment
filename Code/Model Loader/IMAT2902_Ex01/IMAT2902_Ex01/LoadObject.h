@@ -32,8 +32,19 @@ public:
 
 private:
 
+	// Vertices 
 	std::vector<float> v_IndexedVertices;
+	
+	// Vertex Texture
+	std::vector<float> v_IndexedVertexTexture;
+
+	// Vertex Normal
+	std::vector<float> v_IndexedNormals; 
+
+	// Faces 
 	std::vector<unsigned int> v_FaceIndices;
+
+	// Final Vector 
 	std::vector<float> v_Vertices;
 
 	// Member Functions 
