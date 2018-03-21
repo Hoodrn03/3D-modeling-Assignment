@@ -50,7 +50,7 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 			std::string s; 
 
-			std::istringstream iss(line);
+			std::istringstream iss(line); 
 
 			iss >> s; 
 
@@ -59,14 +59,64 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 				// Check 'f' line 
 
-				unsigned int iFaceIndex; 
+				unsigned int iFaceIndex;
 
-				while (iss >> iFaceIndex)
+				std::string temp;
+
+				while (iss >> temp)
 				{
-					iFaceIndex--; 
 
-					v_FaceIndices.push_back(iFaceIndex * 3); 
+					while (temp.size() != 0)
+					{
+
+						int pos = temp.find("/");
+
+						if (pos > 0)
+						{
+							std::string currString = temp.substr(0, pos);
+
+							temp.erase(0, pos + 1);
+
+							iFaceIndex = std::stoi(currString);
+
+							iFaceIndex--;
+
+							v_FaceIndices.push_back(iFaceIndex);
+
+							pos = 0;
+						}
+
+						else
+						{
+							std::string currString = temp.substr(0, temp.size());
+
+							temp.erase(0, temp.size());
+
+							iFaceIndex = std::stoi(currString);
+
+							iFaceIndex--;
+
+							v_FaceIndices.push_back(iFaceIndex);
+						}
+					}
 				}
+
+
+
+				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[0]]);
+				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[1]]);
+				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[2]]);
+				
+				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[3]]);
+				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[4]]);
+				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[5]]);
+
+				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[6]]);
+				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[7]]);
+				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[8]]);
+
+				v_FaceIndices.clear();
+				
 
 			}
 
@@ -75,13 +125,12 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 				// Check 'v' line
 
-				for (int i = 0; i < 3; i++)
+				float val;
+
+				while (iss >> val)
 				{
-					float val; 
 
-					iss >> val; 
-
-					v_IndexedVertices.push_back(val); 
+					v_UnindexedVertices.push_back(val); 
 				}
 
 			}
@@ -91,13 +140,12 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 				// Check 'vt' line 
 
-				for (int i = 0; i < 2; i++)
+				float val;
+
+				while (iss >> val)
 				{
-					float val;
 
-					iss >> val;
-
-					v_IndexedVertexTexture.push_back(val);
+					v_UnindexedVertexTexture.push_back(val);
 				}
 
 			}
@@ -107,13 +155,12 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 				// Check 'vn' line
 
-				for (int i = 0; i < 3; i++)
+				float val;
+
+				while (iss >> val)
 				{
-					float val;
 
-					iss >> val;
-
-					v_IndexedNormals.push_back(val);
+					v_UnindexedNormals.push_back(val);
 				}
 
 			}
@@ -127,8 +174,6 @@ void LoadObject::m_loadobj(std::string sFilePath)
 		modelfile.close(); 
 	}
 
-	// Create Final Vector. 
-
 
 }
 
@@ -140,6 +185,16 @@ void LoadObject::m_loadobj(std::string sFilePath)
 std::vector<float>& LoadObject::m_GetVertices()
 {
 	return v_Vertices; 
+}
+
+std::vector<float>& LoadObject::m_GetVTVertexes()
+{
+	return v_VertexTextures;
+}
+
+std::vector<float>& LoadObject::m_GetVNormals()
+{
+	return v_Normals; 
 }
 
 

@@ -44,9 +44,9 @@ private:
 	Win32OpenGL m_win32OpenGL;
 
 	// Camera Possition Coordinates.
-	float m_cameraX{ 0 };
-	float m_cameraY{ 0 };
-	float m_cameraZ{ 1.5 };
+	float m_cameraX{ 0.0f };
+	float m_cameraY{ 0.0f };
+	float m_cameraZ{ 10.5f };
 
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
@@ -64,6 +64,14 @@ private:
 	float m_aspectRatio;
 
 	LoadObject loadObject; 
+
+	GLuint VBOVertecies;
+	GLuint VBONormals;
+	GLuint VBOTextures;
+
+	GLuint VAO;
+
+	GLuint program = m_win32OpenGL.GetShaderProgram();
 
 	// Memebr Functions 
 

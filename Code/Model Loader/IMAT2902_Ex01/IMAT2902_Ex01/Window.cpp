@@ -85,6 +85,8 @@ void Window::DestroyGLWindow()
 */
 void Window::PrepareToDraw()
 {
+	loadObject.m_loadobj("Models/Test_Objects/cube.obj");
+
 	ComputeProjectionMatrix();
 	ComputeViewMatrix();
 
@@ -92,46 +94,45 @@ void Window::PrepareToDraw()
 	// triangle
 
 	// send the matrices to the shader
-	GLuint program = m_win32OpenGL.GetShaderProgram();
+	program = m_win32OpenGL.GetShaderProgram();
 	Win32OpenGL::SendUniformMatrixToShader(program, m_projectionMatrix, "projection_matrix");
-	Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix");
+	Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix"); 
 
-	// TODO - create VBO and VAO here
 
-	float sourceVertices[] = {
-		-0.5f,-0.5f,0,
-		0.5f,-0.5f,0,
-		-0.5f, 0.5f,0 };
 
-	// the code expects a vector of floats - create it here from the array.
-	int numberOfElements = sizeof(sourceVertices) / sizeof(float);
+	glGenBuffers(1, &VBOVertecies);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies); 
+	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVertices().size() * sizeof(float), &loadObject.m_GetVertices().at(0), GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, &VBOTextures);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
+	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVTVertexes().size() * sizeof(float), &loadObject.m_GetVTVertexes().at(0), GL_STATIC_DRAW);
+
+	glGenBuffers(1, &VBONormals);
+	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
+	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVNormals().size() * sizeof(float), &loadObject.m_GetVNormals().at(0), GL_STATIC_DRAW);
+
 	
-	for (int i = 0; i < numberOfElements; i++)
-	{
-		m_vertices.push_back(sourceVertices[i]);
-	}
 
-	loadObject.m_loadobj("Models\\Test_Objects\\cube.obj");
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL); 
 
-	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
-	// create the vertex buffer object - the vbo
+	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-	if (loadObject.m_GetVertices().size() > 0)
-	{
-		glGenBuffers(1, &m_vboVertices);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
-		glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVertices().size() * sizeof(GLfloat), &loadObject.m_GetVertices()[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
-		// create the vertex array object - the vao
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
-		// vertices are element 0 in VAO (the only element currently)
-		glEnableVertexAttribArray(0);
-	
-	}
+
+
+
 
 	m_win32OpenGL.GetError();			// check all ok
 }
@@ -155,20 +156,16 @@ void Window::Draw()
 	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
+	// m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(30, 30, 30)); 
+
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
 
-	// TODO draw code goes here
 
-	if (loadObject.m_GetVertices().size() > 0)
-	{
-		glBindVertexArray(m_vao); // select first VAO
+	glBindVertexArray(VAO); 
 
-		GLuint numberOfElements = loadObject.m_GetVertices().size() / 3;
+	glDrawArrays(GL_TRIANGLES, 0, loadObject.m_GetVertices().size() / 3);
 
-		glDrawArrays(GL_TRIANGLES, 0, numberOfElements); // draw first object
-
-		glBindVertexArray(0);
-	}
+	glBindVertexArray(NULL); 
 
 	m_win32OpenGL.FinishedDrawing();
 	
@@ -198,7 +195,11 @@ void Window::HandleInput(unsigned char virtualKeyCode)
 	// add code for interaction here
 	if (virtualKeyCode == VK_SPACE)
 	{
-		// do something here
+		
+		m_cameraZ -= 0.1f;
+
+		Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix");
+
 	}
 }
 
