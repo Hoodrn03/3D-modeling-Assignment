@@ -9,17 +9,13 @@
 
 #pragma once
 
-
 //  for M_PI constant
 #define _USE_MATH_DEFINES
 
 #include "defs.h"
 
-#include "Win32OpenGL.h"
-#include "resource.h"
-
 #include "LoadObject.h"
-
+#include "Camera.h"
 
 
 class Window
@@ -43,12 +39,6 @@ private:
 	// open gl helper class.
 	Win32OpenGL m_win32OpenGL;
 
-	// Camera Possition Coordinates.
-	float m_cameraX{ 0.0f };
-	float m_cameraY{ 0.0f };
-	float m_cameraZ{ 10.5f };
-
-	glm::mat4 m_viewMatrix;
 	glm::mat4 m_projectionMatrix;
 	glm::mat4 m_modelMatrix;
 
@@ -57,21 +47,20 @@ private:
 	GLuint m_vao;
 	GLuint m_vboVertices;
 
-
 	float m_xAngle{ 0.0f };
 	float m_zAngle{ 0.0f };
 
 	float m_aspectRatio;
 
-	LoadObject loadObject; 
-
-	GLuint VBOVertecies;
-	GLuint VBONormals;
-	GLuint VBOTextures;
-
 	GLuint VAO;
 
-	GLuint program = m_win32OpenGL.GetShaderProgram();
+	GLuint program;
+
+	// Classes : 
+
+	LoadObject loadObject; 
+	
+	Camera camera;
 
 	// Memebr Functions 
 
@@ -93,7 +82,6 @@ public:
 
 	void ComputeProjectionMatrix();
 	
-	void ComputeViewMatrix();
 	
 	
 };

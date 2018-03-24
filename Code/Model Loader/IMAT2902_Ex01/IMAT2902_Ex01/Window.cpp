@@ -88,32 +88,45 @@ void Window::PrepareToDraw()
 	loadObject.m_loadobj("Models/Test_Objects/simpleCube.obj");
 
 	ComputeProjectionMatrix();
-	ComputeViewMatrix();
-
-	// we compute the model matrix in the draw routine so we can animate the
-	// triangle
+	
+	camera.ComputeDirectionVector();
+	camera.ComputeViewMatrixUsingLookAt();
 
 	// send the matrices to the shader
+	
 	program = m_win32OpenGL.GetShaderProgram();
+	
+	camera.SetViewMatrix(program);
+
 	Win32OpenGL::SendUniformMatrixToShader(program, m_projectionMatrix, "projection_matrix");
-	Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix"); 
+	
 
-
+/*
 	float sourceVertices[] = {
-		-0.5f,-0.5f,0,
+		-0.75f,-0.5f,0,
 		0.5f,-0.5f,0,
 		-0.5f, 0.5f,0 };
-
-
-	// the code expects a vector of floats - create it here from the array.
 	
-	
+
 	int numberOfElements = sizeof(sourceVertices) / sizeof(float);
-	
+
 	for (int i = 0; i < numberOfElements; i++)
 	{
 		m_vertices.push_back(sourceVertices[i]);
-	}	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
+	}
+
+*/
+
+	int numberOfElements = loadObject.m_GetVertices().size();
+
+	for (int i = 0; i < numberOfElements; i++)
+	{
+		m_vertices.push_back(loadObject.m_GetVertices().at(i));
+	}
+
+
+	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
+	
 	// create the vertex buffer object - the vbo
 
 	glGenBuffers(1, &m_vboVertices);
@@ -121,52 +134,15 @@ void Window::PrepareToDraw()
 	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
 
 	// create the vertex array object - the vao
+
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	
 	// vertices are element 0 in VAO (the only element currently)
-	glEnableVertexAttribArray(0);
-
-
-	/*
-	glGenBuffers(1, &VBOVertecies);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies); 
-	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVertices().size() * sizeof(float), &loadObject.m_GetVertices().at(0), GL_STATIC_DRAW);
-
 	
-	glGenBuffers(1, &VBOTextures);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
-	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVTVertexes().size() * sizeof(float), &loadObject.m_GetVTVertexes().at(0), GL_STATIC_DRAW);
-
-	glGenBuffers(1, &VBONormals);
-	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
-	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVNormals().size() * sizeof(float), &loadObject.m_GetVNormals().at(0), GL_STATIC_DRAW);
-
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-	
-	
-	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL); 
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	*/
-
-
-
 
 
 	m_win32OpenGL.GetError();			// check all ok
@@ -195,15 +171,6 @@ void Window::Draw()
 
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
 
-	/*
-	glBindVertexArray(VAO); 
-
-	glDrawArrays(GL_TRIANGLES, 0, loadObject.m_GetVertices().size() / 3);
-
-	glBindVertexArray(NULL); 
-
-	m_win32OpenGL.FinishedDrawing();
-	*/
 
 	glBindVertexArray(m_vao); // select first VAO
 	
@@ -225,7 +192,9 @@ void Window::Draw()
 */
 void Window::Update()
 {
-	// TODO - add any animation here
+	// Add any animation here 
+
+
 
 }
 
@@ -237,15 +206,13 @@ void Window::Update()
 */
 void Window::HandleInput(unsigned char virtualKeyCode)
 {
-	// add code for interaction here
-	if (virtualKeyCode == VK_SPACE)
-	{
-		
-		m_cameraZ -= 0.1f;
 
-		Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix");
+	camera.HandleInput(virtualKeyCode); 
 
-	}
+	program = m_win32OpenGL.GetShaderProgram();
+
+	camera.SetViewMatrix(program);
+
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -312,25 +279,3 @@ void Window::ComputeProjectionMatrix()
 
 //-------------------------------------------------------------------------------------------------
 
-//!
-/*!
-/
-*/
-void Window::ComputeViewMatrix()
-{
-	// the view matrix allows us to implement a camera.
-	// this is based on Anton's simpler version (see recommended books)  
-	
-	// - later we implement a lookAt matrix here....
-	
-	float cam_pos[] = { m_cameraX, m_cameraY, m_cameraZ }; // don't start at zero, or we will be too close
-	
-	float cam_cameraYaw = 0.0f; // y-rotation in degrees
-
-	glm::mat4 T = translate(glm::mat4(1.0f), glm::vec3(-cam_pos[0], -cam_pos[1], -cam_pos[2]));
-	glm::mat4 R = glm::rotate(glm::mat4(1.0f), -cam_cameraYaw, glm::vec3(0.0f, 1.0f, 0.0f));
-	
-	m_viewMatrix = R * T;
-}
-
-//-------------------------------------------------------------------------------------------------

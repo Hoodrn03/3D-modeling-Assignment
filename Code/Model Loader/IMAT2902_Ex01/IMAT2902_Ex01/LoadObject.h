@@ -36,7 +36,7 @@ private:
 	std::vector<float> v_UnindexedVertices;
 	
 	// Vertex Texture
-	std::vector<float> v_UnindexedVertexTexture;
+	std::vector<float> v_UnindexedVertexTextures;
 
 	// Vertex Normal
 	std::vector<float> v_UnindexedNormals; 
@@ -44,7 +44,7 @@ private:
 	// Faces 
 	std::vector<unsigned int> v_FaceIndices;
 
-	// Final Vector 
+	// Final Vectors
 	std::vector<float> v_Vertices;
 	std::vector<float> v_VertexTextures;
 	std::vector<float> v_Normals; 
@@ -53,12 +53,16 @@ private:
 
 public: 
 
+	// This will be used to load a model from an obj file. 
 	void m_loadobj(std::string sFilePath);
 
-	std::vector<float> &m_GetVertices();
+	// This will be used to get access to the final set of vertices from the loaded object.
+	std::vector<float> & m_GetVertices();
 
-	std::vector<float> &m_GetVTVertexes(); 
+	// This will be used to get access to the final set of vertex textures from the loaded object.
+	std::vector<float> & m_GetVertexTextures(); 
 
-	std::vector<float> &m_GetVNormals(); 
+	// This will be used to get access to the final set of vertex normals from the loaded object.
+	std::vector<float> & m_GetVertexNormals(); 
 
 };

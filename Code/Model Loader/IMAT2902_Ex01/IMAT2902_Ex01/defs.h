@@ -7,6 +7,8 @@
 
 #pragma once
 
+
+// C++ general libraries:
 #include <cmath>
 #include <stdio.h>
 #include <string>
@@ -15,6 +17,13 @@
 #include <fstream>
 #include <sstream>
 
+// Linked libraries:
 #include <glm\vec2.hpp>
 #include <glm\vec3.hpp>
 #include <glm\vec4.hpp>
+
+// Local files:
+#include "Win32OpenGL.h"
+#include "Resource.h"
+
+
