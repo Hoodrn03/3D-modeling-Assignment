@@ -85,7 +85,7 @@ void Window::DestroyGLWindow()
 */
 void Window::PrepareToDraw()
 {
-	loadObject.m_loadobj("Models/Test_Objects/cube.obj");
+	loadObject.m_loadobj("Models/Test_Objects/simpleCube.obj");
 
 	ComputeProjectionMatrix();
 	ComputeViewMatrix();
@@ -99,12 +99,43 @@ void Window::PrepareToDraw()
 	Win32OpenGL::SendUniformMatrixToShader(program, m_viewMatrix, "view_matrix"); 
 
 
+	float sourceVertices[] = {
+		-0.5f,-0.5f,0,
+		0.5f,-0.5f,0,
+		-0.5f, 0.5f,0 };
 
+
+	// the code expects a vector of floats - create it here from the array.
+	
+	
+	int numberOfElements = sizeof(sourceVertices) / sizeof(float);
+	
+	for (int i = 0; i < numberOfElements; i++)
+	{
+		m_vertices.push_back(sourceVertices[i]);
+	}	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
+	// create the vertex buffer object - the vbo
+
+	glGenBuffers(1, &m_vboVertices);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
+	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
+
+	// create the vertex array object - the vao
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	
+	// vertices are element 0 in VAO (the only element currently)
+	glEnableVertexAttribArray(0);
+
+
+	/*
 	glGenBuffers(1, &VBOVertecies);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies); 
 	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVertices().size() * sizeof(float), &loadObject.m_GetVertices().at(0), GL_STATIC_DRAW);
 
-
+	
 	glGenBuffers(1, &VBOTextures);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
 	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVTVertexes().size() * sizeof(float), &loadObject.m_GetVTVertexes().at(0), GL_STATIC_DRAW);
@@ -113,15 +144,17 @@ void Window::PrepareToDraw()
 	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
 	glBufferData(GL_ARRAY_BUFFER, loadObject.m_GetVNormals().size() * sizeof(float), &loadObject.m_GetVNormals().at(0), GL_STATIC_DRAW);
 
-	
-
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
+	
+	
 	glBindBuffer(GL_ARRAY_BUFFER, VBOVertecies);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL); 
 
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBONormals);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOTextures);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -129,6 +162,8 @@ void Window::PrepareToDraw()
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+
+	*/
 
 
 
@@ -160,7 +195,7 @@ void Window::Draw()
 
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
 
-
+	/*
 	glBindVertexArray(VAO); 
 
 	glDrawArrays(GL_TRIANGLES, 0, loadObject.m_GetVertices().size() / 3);
@@ -168,7 +203,17 @@ void Window::Draw()
 	glBindVertexArray(NULL); 
 
 	m_win32OpenGL.FinishedDrawing();
+	*/
+
+	glBindVertexArray(m_vao); // select first VAO
 	
+	GLuint numberOfElements = m_vertices.size() / 3;
+	
+	glDrawArrays(GL_TRIANGLES, 0, numberOfElements); // draw first object
+	
+	glBindVertexArray(0);
+
+
 	Win32OpenGL::GetError();			// check all ok
 }
 

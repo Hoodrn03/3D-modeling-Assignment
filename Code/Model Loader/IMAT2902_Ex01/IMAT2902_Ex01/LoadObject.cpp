@@ -66,6 +66,8 @@ void LoadObject::m_loadobj(std::string sFilePath)
 				while (iss >> temp)
 				{
 
+					// obj 'f' line def = 1/1/1 : v/vt/vn 
+
 					while (temp.size() != 0)
 					{
 
@@ -101,19 +103,12 @@ void LoadObject::m_loadobj(std::string sFilePath)
 					}
 				}
 
-
-
-				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[0]]);
-				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[1]]);
-				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[2]]);
-				
-				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[3]]);
-				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[4]]);
-				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[5]]);
-
-				v_Vertices.push_back(v_UnindexedVertices[v_FaceIndices[6]]);
-				v_VertexTextures.push_back(v_UnindexedVertexTexture[v_FaceIndices[7]]);
-				v_Normals.push_back(v_UnindexedNormals[v_FaceIndices[8]]);
+				for (int i = 0; i < 3; i += 1)
+				{
+					v_Vertices.push_back(v_UnindexedVertices.at(v_FaceIndices.at(i)));
+					// v_VertexTextures.push_back(v_UnindexedVertexTexture.at(v_FaceIndices.at(i + 1)));
+					// v_Normals.push_back(v_UnindexedNormals.at(v_FaceIndices.at(i + 2)));
+				}
 
 				v_FaceIndices.clear();
 				
