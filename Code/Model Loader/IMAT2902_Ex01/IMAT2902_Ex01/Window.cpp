@@ -99,30 +99,19 @@ void Window::PrepareToDraw()
 	camera.SetViewMatrix(program);
 
 	Win32OpenGL::SendUniformMatrixToShader(program, m_projectionMatrix, "projection_matrix");
+
 	
 
-/*
-	float sourceVertices[] = {
-		-0.75f,-0.5f,0,
-		0.5f,-0.5f,0,
-		-0.5f, 0.5f,0 };
-	
+	testItems.m_CreateCube();
 
-	int numberOfElements = sizeof(sourceVertices) / sizeof(float);
+	int numberOfElements = testItems.m_GetVertices().size();
 
 	for (int i = 0; i < numberOfElements; i++)
 	{
-		m_vertices.push_back(sourceVertices[i]);
-	}
+		m_vertices.push_back(testItems.m_GetVertices().at(i));
+	} 
 
-*/
 
-	int numberOfElements = loadObject.m_GetVertices().size();
-
-	for (int i = 0; i < numberOfElements; i++)
-	{
-		m_vertices.push_back(loadObject.m_GetVertices().at(i));
-	}
 
 
 	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);

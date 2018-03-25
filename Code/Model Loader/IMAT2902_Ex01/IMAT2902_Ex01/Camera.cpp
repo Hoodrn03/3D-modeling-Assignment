@@ -1,4 +1,4 @@
-/*!\file Window.cpp
+/*!\file Camera.cpp
 *
 * This will hold all of the function definitions for the class Camera.
 *

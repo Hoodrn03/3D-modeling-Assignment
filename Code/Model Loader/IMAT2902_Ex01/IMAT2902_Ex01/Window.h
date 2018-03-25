@@ -16,7 +16,7 @@
 
 #include "LoadObject.h"
 #include "Camera.h"
-
+#include "TestItems.h"
 
 class Window
 {
@@ -61,6 +61,8 @@ private:
 	LoadObject loadObject; 
 	
 	Camera camera;
+
+	TestItems testItems; 
 
 	// Memebr Functions 
 
