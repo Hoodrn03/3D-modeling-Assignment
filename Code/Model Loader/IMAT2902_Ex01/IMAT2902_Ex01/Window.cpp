@@ -102,33 +102,30 @@ void Window::PrepareToDraw()
 
 	testItems.m_CreateCube();
 
-	int numberOfElements = testItems.m_GetVertices().size();
+	int numberOfElements = loadObject.m_GetVertices().size();
 
 	for (int i = 0; i < numberOfElements; i++)
 	{
-		m_vertices.push_back(testItems.m_GetVertices().at(i));
+		m_vertices.push_back(loadObject.m_GetVertices().at(i));
 	} 
-
-
 
 
 	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
 	
 	// create the vertex buffer object - the vbo
-
 	glGenBuffers(1, &m_vboVertices);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
 	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
 
-	// create the vertex array object - the vao
+	//---glNamedBufferData(m_vboVertices, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
 
+	// create the vertex array object - the vao
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-	
+
 	// vertices are element 0 in VAO (the only element currently)
-	
 	glEnableVertexAttribArray(0);
 
 
@@ -147,36 +144,35 @@ void Window::Draw()
 	m_win32OpenGL.ClearGLDisplay();
 
 	GLuint program = m_win32OpenGL.GetShaderProgram();
-	
-	
-	// set up the model matrix - we could do this in the update!!!!
-	
-	m_modelMatrix = glm::mat4(1.0f);	// identity matrix;
-	
+
+	// TODO - Add drawing Code Here
+
+	GLuint numberOfElements{ 0 };
 
 
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3(1.0f, 0.0f, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_yAngle), glm::vec3(0.0f, 0.1f, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3(0.0f, 0.0f, 1.0f));
-	
-	
-	// m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(30, 30, 30)); 
+	// First Cube. 
 
-	
+	// send a colour to the shader - used if we run the flat shader
+	glm::vec3 colour{ 1.0f, 0.0f, 0.0f };
+	Win32OpenGL::SendUniformVector3ToShader(program, colour, "surface_colour");
+
+	m_modelMatrix = glm::mat4(1.0f);
+
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3{ 1, 0, 0 });
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_yAngle), glm::vec3{ 0, 1, 0 });
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3{ 0, 0, 1 });
 	
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
 
-
-
-	glBindVertexArray(m_vao); // select first VAO
-	
-	GLuint numberOfElements = m_vertices.size() / 3;
-	
-	glDrawArrays(GL_TRIANGLES, 0, numberOfElements); // draw first object
-	
+	glBindVertexArray(m_vao);		// select first VAO
+	numberOfElements = m_vertices.size() / 3;
+	glDrawArrays(GL_TRIANGLES, 0, numberOfElements);	// draw first object
+														
+	// release the vao - we have finished drawing with it this frame
 	glBindVertexArray(0);
 
 
+	Win32OpenGL::FinishedDrawing();
 	Win32OpenGL::GetError();			// check all ok
 }
 

@@ -28,7 +28,7 @@ public:
 private:
 
 	// This will hold the loaded test shape. 
-	std::vector<float> m_vertices;
+	std::vector<float> v_Vertices;
 
 	// Member Functions 
 

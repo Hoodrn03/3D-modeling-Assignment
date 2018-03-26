@@ -65,9 +65,30 @@ void LoadObject::m_loadobj(std::string sFilePath)
 
 				unsigned int iFaceIndex;
 
+				static const int forwardSlash = 0x2F; 
 
+				while (iss >> iFaceIndex)
+				{
 
+					iFaceIndex--;
+
+					v_FaceIndices.push_back(iFaceIndex * 3);
+
+				}
+
+				// Construct vectors.
+
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						v_Vertices.push_back(v_UnindexedVertices.at(v_FaceIndices.at(i) + j));
+					}
+				}
 				
+			
+			v_FaceIndices.clear();
+
 
 			}
 

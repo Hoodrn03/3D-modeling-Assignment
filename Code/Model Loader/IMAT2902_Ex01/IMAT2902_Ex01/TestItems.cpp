@@ -47,7 +47,7 @@ void TestItems::m_CreateTriangle()
 	
 	for (int i = 0; i < numberOfElements; i++)
 	{
-		m_vertices.push_back(sourceVertices[i]);
+		v_Vertices.push_back(sourceVertices[i]);
 	}
 }
 
@@ -79,7 +79,7 @@ void TestItems::m_CreateCube()
 
 	for (int i = 0; i < numberOfElements; i++)
 	{
-		m_vertices.push_back(sourceVertices[i]);
+		v_Vertices.push_back(sourceVertices[i]);
 	}
 }
 
@@ -91,7 +91,7 @@ void TestItems::m_CreateCube()
 */
 std::vector<float>& TestItems::m_GetVertices()
 {
-	return m_vertices;
+	return v_Vertices;
 }
 
 //-------------------------------------------------------------------------------------------------
