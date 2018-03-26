@@ -100,8 +100,6 @@ void Window::PrepareToDraw()
 
 	Win32OpenGL::SendUniformMatrixToShader(program, m_projectionMatrix, "projection_matrix");
 
-	
-
 	testItems.m_CreateCube();
 
 	int numberOfElements = testItems.m_GetVertices().size();
@@ -150,15 +148,24 @@ void Window::Draw()
 
 	GLuint program = m_win32OpenGL.GetShaderProgram();
 	
+	
 	// set up the model matrix - we could do this in the update!!!!
+	
 	m_modelMatrix = glm::mat4(1.0f);	// identity matrix;
 	
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3(1.0f, 0.0f, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
+
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_yAngle), glm::vec3(0.0f, 0.1f, 0.0f));
+	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	
 	// m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(30, 30, 30)); 
 
+	
+	
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
+
 
 
 	glBindVertexArray(m_vao); // select first VAO
@@ -183,7 +190,9 @@ void Window::Update()
 {
 	// Add any animation here 
 
-
+	m_xAngle += 1.5f;
+	m_yAngle += 3.5f;
+	m_zAngle += 2.0f;
 
 }
 

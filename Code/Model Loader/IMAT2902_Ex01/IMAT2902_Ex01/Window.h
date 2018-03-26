@@ -49,6 +49,7 @@ private:
 
 	float m_xAngle{ 0.0f };
 	float m_zAngle{ 0.0f };
+	float m_yAngle{ 0.0f };
 
 	float m_aspectRatio;
 
