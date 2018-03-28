@@ -85,7 +85,7 @@ void Window::DestroyGLWindow()
 */
 void Window::PrepareToDraw()
 {
-	loadObject.m_loadobj("Models/Test_Objects/simpleCube.obj");
+	loadObject.m_loadobj("Models/Structures/Chain_Link_Fence.obj");
 
 	ComputeProjectionMatrix();
 	

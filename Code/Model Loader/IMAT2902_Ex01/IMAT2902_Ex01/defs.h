@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cctype>
 
 // Linked libraries:
 #include <glm\vec2.hpp>
