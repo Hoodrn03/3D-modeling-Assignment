@@ -148,7 +148,9 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="defs.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="TestItems.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="IMAT2902_Ex01.h" />
     <ClInclude Include="LoadObject.h" />
@@ -160,7 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="TestItems.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="IMAT2902_Ex01.cpp" />
     <ClCompile Include="LoadObject.cpp" />

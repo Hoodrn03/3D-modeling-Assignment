@@ -14,9 +14,9 @@
 
 #include "defs.h"
 
-#include "LoadObject.h"
 #include "Camera.h"
 #include "TestItems.h"
+#include "Model.h"
 
 class Window
 {
@@ -44,8 +44,14 @@ private:
 
 	vector<float> m_vertices;			// We can't initialise at compile time
 
+	// new for lighting
+	vector<float> m_normals;
+
 	GLuint m_vao;
 	GLuint m_vboVertices;
+
+	// new for lighting
+	GLuint m_vboNormals;
 
 	float m_xAngle{ 0.0f };
 	float m_zAngle{ 0.0f };
@@ -53,17 +59,28 @@ private:
 
 	float m_aspectRatio;
 
+	// new for lighting
+
+	glm::vec3 m_lightColourSpecular{ 1.0f,1.0f,1.0f };
+	glm::vec3 m_lightColourDiffuse{ 0.8f, 0.8f, 0.8f };
+	glm::vec3 m_lightColourAmbient{ 0.3f, 0.3f, 0.3f };
+	glm::vec3 m_lightPosition{ 0.0f, 5.0f, 5.0f };
+
+
+
 	GLuint VAO;
 
 	GLuint program;
 
 	// Classes : 
-
-	LoadObject loadObject; 
 	
 	Camera camera;
 
 	TestItems testItems; 
+
+	Model m_model;
+
+	std::vector<Model> v_Scene; 
 
 	// Memebr Functions 
 

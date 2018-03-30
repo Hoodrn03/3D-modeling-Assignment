@@ -15,6 +15,19 @@
 Window::Window()
 {
 	// we don't use RAII currently so no action in constructor
+
+	// Model model;
+
+	// model.m_LoadModel("Models/Structures/Grass.obj");
+
+	// v_Scene.push_back(model); 
+
+	Model model_Two;
+
+	model_Two.m_LoadModel("Models/Test_Objects/simpleCubeWithMaterials.obj");
+
+	v_Scene.push_back(model_Two);
+
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -25,6 +38,7 @@ Window::Window()
 */
 Window::~Window()
 {
+
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -36,23 +50,18 @@ Window::~Window()
 void Window::CreateGLWindow(HWND hWnd, RECT rect)
 {
 	/*
-	
 		this code is called from a WM_CREATE message in winproc
-	
-	
 	*/
+
 
 	m_win32OpenGL.CreateGLContext(hWnd);	// may throw an exception!!!
 										
-	// MessageBoxA(0, (char*)glGetString(GL_VERSION), "OPENGL VERSION", 0);
 	m_aspectRatio = static_cast<float>(rect.right / rect.bottom);
 
 
 	// TODO try these shaders later
 	
-	// m_win32OpenGL.CreateShadersAndProgram("flat");
-	// m_win32OpenGL.CreateShadersAndProgram("flatVerticesAsColours");
-	m_win32OpenGL.CreateShadersAndProgram("flatFixedColour");
+	m_win32OpenGL.CreateShadersAndProgram("phong");
 
 
 	m_win32OpenGL.SetupDisplay();
@@ -85,10 +94,11 @@ void Window::DestroyGLWindow()
 */
 void Window::PrepareToDraw()
 {
-	loadObject.m_loadobj("Models/Structures/Chain_Link_Fence.obj");
 
 	ComputeProjectionMatrix();
 	
+
+	// Compute View Matrix 
 	camera.ComputeDirectionVector();
 	camera.ComputeViewMatrixUsingLookAt();
 
@@ -100,33 +110,19 @@ void Window::PrepareToDraw()
 
 	Win32OpenGL::SendUniformMatrixToShader(program, m_projectionMatrix, "projection_matrix");
 
-	testItems.m_CreateCube();
+	// Lighting 
 
-	int numberOfElements = loadObject.m_GetVertices().size();
+	Win32OpenGL::SendUniformVector3ToShader(program, m_lightPosition, "light_position_world");
+	Win32OpenGL::SendUniformVector3ToShader(program, m_lightColourSpecular, "light_colour_specular");
+	Win32OpenGL::SendUniformVector3ToShader(program, m_lightColourDiffuse, "light_colour_diffuse");
+	Win32OpenGL::SendUniformVector3ToShader(program, m_lightColourAmbient, "light_colour_ambient");
 
-	for (int i = 0; i < numberOfElements; i++)
+	// m_model.m_PrepareModel();
+
+	for (unsigned int i = 0; i < v_Scene.size(); i++)
 	{
-		m_vertices.push_back(loadObject.m_GetVertices().at(i));
-	} 
-
-
-	// later we can use Win32OpenGL::CreateVAO(m_vao, m_vboVertices, vertices);
-	
-	// create the vertex buffer object - the vbo
-	glGenBuffers(1, &m_vboVertices);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
-	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
-
-	//---glNamedBufferData(m_vboVertices, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
-
-	// create the vertex array object - the vao
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboVertices);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	// vertices are element 0 in VAO (the only element currently)
-	glEnableVertexAttribArray(0);
+		v_Scene.at(i).m_PrepareModel();
+	}
 
 
 	m_win32OpenGL.GetError();			// check all ok
@@ -147,8 +143,12 @@ void Window::Draw()
 
 	// TODO - Add drawing Code Here
 
-	GLuint numberOfElements{ 0 };
+	// m_model.m_DrawModels();
 
+	for (unsigned int i = 0; i < v_Scene.size(); i++)
+	{
+		v_Scene.at(i).m_DrawModels();
+	}
 
 	// First Cube. 
 
@@ -157,19 +157,8 @@ void Window::Draw()
 	Win32OpenGL::SendUniformVector3ToShader(program, colour, "surface_colour");
 
 	m_modelMatrix = glm::mat4(1.0f);
-
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_xAngle), glm::vec3{ 1, 0, 0 });
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_yAngle), glm::vec3{ 0, 1, 0 });
-	m_modelMatrix = glm::rotate(m_modelMatrix, (float)glm::radians(m_zAngle), glm::vec3{ 0, 0, 1 });
 	
 	Win32OpenGL::SendUniformMatrixToShader(program, m_modelMatrix, "model_matrix");
-
-	glBindVertexArray(m_vao);		// select first VAO
-	numberOfElements = m_vertices.size() / 3;
-	glDrawArrays(GL_TRIANGLES, 0, numberOfElements);	// draw first object
-														
-	// release the vao - we have finished drawing with it this frame
-	glBindVertexArray(0);
 
 
 	Win32OpenGL::FinishedDrawing();
@@ -185,10 +174,6 @@ void Window::Draw()
 void Window::Update()
 {
 	// Add any animation here 
-
-	m_xAngle += 1.5f;
-	m_yAngle += 3.5f;
-	m_zAngle += 2.0f;
 
 }
 
