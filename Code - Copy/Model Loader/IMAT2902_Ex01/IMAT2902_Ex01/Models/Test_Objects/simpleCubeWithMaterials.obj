@@ -1,0 +1,88 @@
+# cube.obj
+# revised so that 0,0,0 is the origin
+ 
+g cube
+ 
+ 
+mtllib cubeMaterials.mtl
+#mtllib cubeMaterialsWithPartTextures.mtl
+#mtllib cubeMaterialsWithTextures.mtl
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+# 8_ _ _7   0.0  5.0  0.0   5.0  5.0  0.0
+# /|    /|
+# 4/_|_ 3/ |   0.0  5.0  5.0   5.0  5.0  5.0
+# | 5|_ _|_|6  0.0  0.0  0.0   5.0  0.0  0.0
+# | /    | /
+# |/_ _ _|/
+# 1      2     0.0  0.0  5.0   5.0  0.0  5.0
+# 
+# Open gl coordinate system
+# 
+# y
+# |
+# |
+# |
+# |
+# O----->x
+# /
+# /
+# /
+# z
+# 
+ 
+#front 
+#right 
+#mtl_right 
+#back 
+#mtl_back 
+#left 
+#mtl_left 
+#top 
+#mtl_top 
+#bottom 
+#mtl_bottom 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+v -0.5 -0.5 0.5
+v 0.5 -0.5 0.5
+v 0.5 0.5 0.5
+v -0.5 0.5 0.5
+v -0.5 -0.5 -0.5
+v 0.5 -0.5 -0.5
+v 0.5 0.5 -0.5
+v -0.5 0.5 -0.5
+
+vt 0 0
+
+vn 1 0 0
+vn -1 0 0
+vn 0 1 0
+vn 0 -1 0
+vn 0 0 1
+vn 0 0 -1
+
+f  1/1/5 2/1/5 3/1/5
+f  1/1/5 3/1/5 4/1/5
+f  2/1/1 6/1/1 7/1/1
+f  2/1/1 7/1/1 3/1/1
+f  6/1/6 5/1/6 8/1/6
+f  6/1/6 8/1/6 7/1/6
+f  5/1/2 1/1/2 4/1/2
+f  5/1/2 4/1/2 8/1/2
+f  4/1/3 3/1/3 7/1/3
+f  4/1/3 7/1/3 8/1/3
+f  5/1/4 6/1/4 2/1/4
+f  5/1/4 2/1/4 1/1/4
